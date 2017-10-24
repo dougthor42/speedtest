@@ -18,7 +18,7 @@ ping = data['Ping (ms)']
 #  print(upload.describe())
 
 def hist(data, label):
-    count, division = np.histogram(data, bins=5)
+    count, division = np.histogram(data, bins=8)
     hist_data = [(str(d), c) for d, c in zip(division, count)]
     graph = Pyasciigraph()
     for line in graph.graph(label, hist_data):

@@ -1,3 +1,3 @@
-. /home/dthor/speedtest/.venv-speedtest/bin/activate
-speedtest --csv >> /home/dthor/speedtest/results.csv
+. ~/speedtest/.venv-speedtest/bin/activate
+speedtest --csv >> ~/speedtest/results.csv
 deactivate

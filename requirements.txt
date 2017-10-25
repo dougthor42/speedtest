@@ -1,0 +1,4 @@
+bashplotlib
+ascii_graph
+numpy
+pandas

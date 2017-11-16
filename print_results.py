@@ -17,6 +17,16 @@ ping = data['Ping (ms)']
 #  print(download.describe())
 #  print(upload.describe())
 
+def reject_outliers(data, m=5.189):
+    """https://stackoverflow.com/a/16562028"""
+    d = np.abs(data - np.median(data))
+    mdev = np.median(d)
+    s = d/mdev if mdev else 0
+    cleaned = data[s < m]
+    outliers = data[s > m]
+    return cleaned, outliers
+
+
 def hist(data, label):
     count, division = np.histogram(data, bins=8)
     hist_data = [(str(d), c) for d, c in zip(division, count)]

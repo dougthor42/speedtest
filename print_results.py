@@ -28,6 +28,10 @@ def reject_outliers(data, m=5.189):
 
 
 def hist(data, label):
+    data, outliers = reject_outliers(data)
+    outlier_msg = "{} outliers rejected: {}"
+    outlier_str = ["{:.3f}".format(x) for x in sorted(list(outliers))]
+    print(outlier_msg.format(len(outliers), outlier_str))
     count, division = np.histogram(data, bins=8)
     hist_data = [(str(d), c) for d, c in zip(division, count)]
     graph = Pyasciigraph()

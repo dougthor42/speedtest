@@ -1,5 +1,5 @@
-speedtest-cli
-bashplotlib
-ascii_graph
-numpy
-pandas
+speedtest-cli==1.0.7
+bashplotlib==0.6.5
+ascii_graph==1.4.3
+numpy==1.13.3
+pandas==0.21.1

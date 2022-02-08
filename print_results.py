@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import tempfile
 import numpy as np
 import pandas as pd
 from bashplotlib.scatterplot import plot_scatter
@@ -12,6 +13,7 @@ data = pd.read_csv('results.csv')
 download = data['Download (bits/s)'] / 1e6
 upload = data['Upload (bits/s)'] / 1e6
 ping = data['Ping (ms)']
+timestamps = pd.to_datetime(data["Timestamp"])
 
 #  print(ping.describe())
 #  print(download.describe())
@@ -40,10 +42,57 @@ def hist(data, label):
     print()
 
 
+def scatter(x_data, y_data, title, n_points=None):
+    """
+    x_data: iterable of floats
+        X data to plot
+    y_data: iterable of floats
+        Y data to plot
+    title: string
+        Title of the graph
+    n_points: int
+        How many of points (most recent) to plot. If None, plot all.
+    """
+    # bashplotlib.scatter.plot_scatter only accepts **files** (well, the pypi
+    # release only accepts files. [PR43](https://github.com/glamp/bashplotlib/pull/43)
+    # was merged but not released on pypi.
+    # So we fake it. The code for `plot_scatter` will call `open(xs)`, so we just
+    # write things to a temp file. /shrug.
+
+    x_stream = tempfile.NamedTemporaryFile()
+    y_stream = tempfile.NamedTemporaryFile()
+
+    for i, ts in enumerate(x_data[-n_points:]):
+        # timestamps are pd.datetime64 objects which store the number of
+        # nanoseconds since the Unix epoch in the `value` attribute.
+        ns = ts.value
+        ms = ts.value / 1000
+        x_stream.write((str(i) + "\n").encode("utf-8"))
+    x_stream.seek(0)
+
+    for yval in y_data[-n_points:]:
+        y_stream.write((str(yval) + "\n").encode("utf-8"))
+    y_stream.seek(0)
+
+    plot_scatter(
+        f=None,
+        xs=x_stream.name,
+        ys=y_stream.name,
+        size=20,
+        pch="x",
+        colour="red",
+        title=title,
+    )
+
+    # bashplotlib does not close files...
+    x_stream.close()
+    y_stream.close()
+
+
 # A histogram of Ping
 hist(ping, 'Ping')
 hist(download, 'Download (Mbits/s)')
 hist(upload, 'Upload (Mbits/s)')
 
 
-#  plot_scatter(f=zip(range(6), ping), xs=None, ys=None, size=50, pch='x', colour='red', title='ping')
+scatter(timestamps, download, "download", 10)

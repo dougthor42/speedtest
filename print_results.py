@@ -95,5 +95,12 @@ hist(ping, "Ping")
 hist(download, "Download (Mbits/s)")
 hist(upload, "Upload (Mbits/s)")
 
+n = 10
+scatter(timestamps, download, "download", n)
 
-scatter(timestamps, download, "download", 10)
+# Yeah, there's a better way to do this but I don't care right now.
+print(f"last {n} download points:")
+last_n_data = data.tail(n).loc[:, ["Timestamp", "Download (bits/s)"]]
+last_n_data["Download (bits/s)"] = last_n_data["Download (bits/s)"] / 1e6
+last_n_data.rename(columns={"Download (bits/s)": "Download (Mbits/s)"}, inplace=True)
+print(last_n_data)

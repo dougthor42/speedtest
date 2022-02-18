@@ -52,9 +52,8 @@ Make sure to:
    42 * * * * username /home/username/speedtest/run_speedtest.sh
    ```
 
-3. Make the data file:
+3. Make the data file if it doesn't already exist.
 
    ```
-   speedtest --csv-headers > results.csv
+   speedtest --csv-header > results.csv
    ```
-

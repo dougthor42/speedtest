@@ -100,7 +100,14 @@ scatter(timestamps, download, "download", n)
 
 # Yeah, there's a better way to do this but I don't care right now.
 print(f"last {n} download points:")
-last_n_data = data.tail(n).loc[:, ["Timestamp", "Download (bits/s)"]]
+last_n_data = data.tail(n).loc[:, ["Timestamp", "Download (bits/s)", "Upload (bits/s)"]]
 last_n_data["Download (bits/s)"] = last_n_data["Download (bits/s)"] / 1e6
-last_n_data.rename(columns={"Download (bits/s)": "Download (Mbits/s)"}, inplace=True)
+last_n_data["Upload (bits/s)"] = last_n_data["Upload (bits/s)"] / 1e6
+last_n_data.rename(
+    columns={
+        "Download (bits/s)": "Download (Mbits/s)",
+        "Upload (bits/s)": "Upload (Mbits/s)",
+    },
+    inplace=True,
+)
 print(last_n_data)
